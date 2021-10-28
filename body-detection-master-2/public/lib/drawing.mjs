@@ -56,6 +56,17 @@ function drawSolidRect(canvas, x, y, size, color, opacity) {
    ctx.fillRect(x, y, size, size)
 }
 
+function drawSolidRect2(canvas, x, y, size1, size2, color, opacity) {
+   const ctx = canvas.getContext("2d")
+   if (!opacity)
+      opacity = 1
+   ctx.beginPath()
+   
+   ctx.opacity = opacity
+   ctx.fillStyle = color
+   ctx.fillRect(x, y, size1, size2)
+}
+
 function drawBodyParts(canvas, bodies, enabledBodyPartNames, has3DData) {
    const ctx = canvas.getContext("2d")
    let bodyPart2D
@@ -109,4 +120,4 @@ function drawBodyParts(canvas, bodies, enabledBodyPartNames, has3DData) {
    }
 }
 
-export { drawImageWithOverlay, drawSolidCircle, drawStar, drawBodyParts, drawSolidRect}
+export { drawImageWithOverlay, drawSolidCircle, drawStar, drawBodyParts, drawSolidRect, drawSolidRect2}

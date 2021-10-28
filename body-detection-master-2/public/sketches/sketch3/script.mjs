@@ -28,66 +28,80 @@ function clamp(v, min, max) {
   return ((v - min) / (range));
 } 
 
-function outputNoseSpeed(status, body) {
+function outputWristSpeed(status, body) {
   if (body) {
     const speedRight = body.getBodyPart3D(bodyPartsList.rightWrist).speed.absoluteSpeed.toFixed(2)
     const speedLeft = body.getBodyPart3D(bodyPartsList.leftWrist).speed.absoluteSpeed.toFixed(2)
-    status.innerText = `Speed of wrists: ${speedRight} m/s , ${speedLeft} m/s`
+    status.innerText = `Speed of wrists: right: ${speedRight} m/s , left: ${speedLeft} m/s`
   }
 }
 
-function drawNoseAndEyes(canvas, body) {
+function drawWrists(canvas, body) {
   if (body) {
     const rightWrist = body.getBodyPart2D(bodyPartsList.rightWrist)
     const leftWrist = body.getBodyPart2D(bodyPartsList.leftWrist)
-    // const rightPinky = body.getBodyPart2D(bodyPartsList.rightPinky)
-    // const leftWrist = body.getBodyPart2D(bodyPartsList.leftWrist)
 
-    const speedRight = body.getBodyPart3D(bodyPartsList.rightWrist).speed.absoluteSpeed.toFixed(2)
-    const speedLeft = body.getBodyPart3D(bodyPartsList.leftWrist).speed.absoluteSpeed.toFixed(2)
-   
     // wrists
     drawSolidCircle(canvas, rightWrist.position.x, rightWrist.position.y, 10, 'red')
     drawSolidCircle(canvas, leftWrist.position.x, leftWrist.position.y, 10, 'red')
 
     let xStart = 320;
     let size = 70;
-    let yStart = 340;
+    let yStart = 240;
     let hue = 300;
     let sat = 100;
     let lum = 50;
+    let color = `hsl(${hue}, ${sat}%, ${lum}%)`;
 
-    const xDiff = (rightWrist.position.x - xStart);
-    const yDiff = (rightWrist.position.y - yStart);
-    const distance = Math.hypot(xDiff, yDiff);
+    const xDiffRight = (rightWrist.position.x - xStart);
+    const yDiffRight = (rightWrist.position.y - yStart);
+    const distanceR = Math.hypot(xDiffRight, yDiffRight);
 
-    let clampedDistance = clamp(distance, 0, 700); 
+    const xDiffLeft = (leftWrist.position.x - xStart);
+    const yDiffLeft = (leftWrist.position.y - yStart);
+    const distanceL = Math.hypot(xDiffLeft, yDiffLeft);
 
-    let inOrOut = size - distance;
+    let clampedDistanceR = clamp(distanceR, 0, 700);
+    let clampedDistanceL = clamp(distanceL, 0, 700); 
+
+    let inOrOutR = size - distanceR;
+    let inOrOutL = size - distanceL;
+
+    const speedRight = body.getBodyPart3D(bodyPartsList.rightWrist).speed.absoluteSpeed.toFixed(2)
+    const speedLeft = body.getBodyPart3D(bodyPartsList.leftWrist).speed.absoluteSpeed.toFixed(2)
 
   // punching from the right
-    if (speedRight > 1 && inOrOut > -1) {
-    xStart = 480;
+    if (speedRight > 1 && inOrOutR > -1) {
+    xStart = 600;
+  }
+
+  // punching from the left
+    if (speedLeft > 1 && inOrOutL > -1) {
+    xStart = 40;
   }
 
   // touching
-    if (inOrOut > -1) {
+    if (inOrOutR > -1) {
       lum = 10;
-    };
+    } else if (inOrOutL > -1) {
+      lum = 10;
+    }
 
-    let color = `hsl(${hue}, ${sat}%, ${lum}%)`;
+  // changing color
+  if (distanceL < 300) {
+    color = `hsl(${hue}, ${100 * clampedDistanceL}%, ${lum}%)`
+  } else if (distanceR < 300) {
+    color = `hsl(${hue}, ${sat}%, ${100 * clampedDistanceR}%)`
+  }
+
+  
 
     drawSolidCircle(canvas, xStart, yStart, size, color);
 
    //${240 * distance}
-    //console.log(`x: ${leftEye.position.x} y: ${leftEye.position.y}`);
-    // console.log(clampedDistance);
-
-    // if (rightWrist.position.x > 280 && rightWrist.position.x < 370 && rightWrist.position.y > 300 && rightWrist.position.y < 390 && leftWrist.position.x > 280 && leftWrist.position.x < 370 && leftWrist.position.y > 300 && leftWrist.position.y < 390) {
-    //   // let color = `rgb(${255 * clampedDistance}, 0, 0)`;
-    //   console.log("close")
-    // };
-    // console.log(inOrOut);
+  console.log(distanceL);
+  console.log(clampedDistanceL)
+    
   }
 };
 
@@ -113,8 +127,8 @@ async function run(canvas, status) {
 
   // draw video with nose and eyes overlaid onto canvas continuously and output speed of nose
   continuosly(() => {
-    drawImageWithOverlay(canvas, video, () => drawNoseAndEyes(canvas, latestBody))
-    outputNoseSpeed(status, latestBody)
+    drawImageWithOverlay(canvas, video, () => drawWrists(canvas, latestBody))
+    outputWristSpeed(status, latestBody)
   })
 }
 
