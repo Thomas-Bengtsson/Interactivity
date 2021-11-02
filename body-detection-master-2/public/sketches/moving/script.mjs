@@ -9,7 +9,6 @@ import { createCameraFeed, facingMode } from '../../lib/camera.mjs'
     let size = 60;
     let yStart = 240;
     let move = 20;
-    let opacity = 0.5
 
     let hue = 300;
     let sat = 100;
@@ -112,13 +111,13 @@ function drawParts(canvas, body) {
 
   
   // punching from the right
-    if (speedRight > 0.6 && inOrOutR > -1) {
+    if (speedRight > 0.4 && inOrOutR > -1) {
     xStart += move;
    // move = clamp((speedRight * 10), 0, 640);
     }
 
   // punching from the left
-    if (speedLeft > 0.6 && inOrOutL > -1) {
+    if (speedLeft > 0.4 && inOrOutL > -1) {
     xStart -= move;
   }
 
@@ -178,10 +177,10 @@ function drawParts(canvas, body) {
       
   // drawSolidCircle(canvas, xC, yC, radiusC, 'white', 0.5)
 
-  drawCircle(canvas, xC, yC, radiusC);
+  // drawCircle(canvas, xC, yC, radiusC);
 
   // draw a ball
-  drawSolidCircle(canvas, xStart, yStart, size, color, opacity);
+  drawSolidCircle(canvas, xStart, yStart, size, color, 0.5);
 
  
   

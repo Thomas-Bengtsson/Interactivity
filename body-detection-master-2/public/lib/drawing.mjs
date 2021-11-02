@@ -17,6 +17,14 @@ function drawSolidCircle(canvas, x, y, radius, color, opacity) {
    ctx.fill()
 }
 
+function drawCircle(canvas, x, y, radius) {
+   const ctx = canvas.getContext("2d")
+   ctx.beginPath()
+   ctx.arc(x, y, radius, 0, 2 * Math.PI)
+   ctx.strokeStyle = 'white'
+   ctx.stroke();  
+}
+
 function drawStar(canvas, cx, cy, spikes, outerRadius, innerRadius, color, opacity) {
    const ctx = canvas.getContext("2d")
    const step = Math.PI / spikes
@@ -120,4 +128,4 @@ function drawBodyParts(canvas, bodies, enabledBodyPartNames, has3DData) {
    }
 }
 
-export { drawImageWithOverlay, drawSolidCircle, drawStar, drawBodyParts, drawSolidRect, drawSolidRect2}
+export { drawImageWithOverlay, drawSolidCircle, drawCircle, drawStar, drawBodyParts, drawSolidRect, drawSolidRect2}
